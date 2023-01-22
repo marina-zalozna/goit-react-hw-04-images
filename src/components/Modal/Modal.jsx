@@ -12,24 +12,21 @@ export function Modal({ onClose, modalImage }) {
          onClose();
         }
     };
-    
-    const handleCloseClick = e => {
 
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+        window.removeEventListener('keydown', handleKeyDown)
+    };  
+    } , [onClose]);
+
+    const handleCloseClick = e => {
         if (e.currenttarget !== e.target) {
         onClose();
         }      
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('click', handleCloseClick)
-
-    return () => {
-        window.removeEventListener('keydown', handleKeyDown)
-        window.removeEventListener('click', handleCloseClick)
-    } 
-})
+    };
 
   return createPortal(
-    <div className={css.Overlay}>
+    <div className={css.Overlay} onClick={handleCloseClick}>
       <div className={css.Modal}>
         <img src={modalImage} alt="modalPicture" />
       </div>

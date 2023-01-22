@@ -6,14 +6,17 @@ import css from './ImageGallery.module.css';
 export function ImageGallery({ cards, onOpen }) {
   return (
     <ul className={css.ImageGallery}>
-      {cards.map(({ id, webformatURL, largeImageURL }) => {
+      {cards.map(({ id, webformatURL, largeImageURL }) => { 
+        return (
         <ImageGalleryItem
           key={id}
           webformatURL={webformatURL}
           largeImageURL={largeImageURL}
           onOpen={onOpen}
-        />;
-      })}
+        />)
+      
+    })
+  }
     </ul>
   );
 }

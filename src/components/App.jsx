@@ -12,74 +12,80 @@ import css from './App.module.css';
 export function App() {
   const [cards, setCards] = useState([]);
   const [search, setSearch] = useState('');
-  const [error, setError] = useState('');
+  const [ , setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [modalImage, setModalImage] = useState(null);
-  const [total, setTotal] = useState(0)
+  const [, setTotal] = useState(0);
 
   useEffect(() => {
+    
     if (search !== '') {
-        const URL = 'https://pixabay.com/api/';
-        const KEY = '31527822-d896c43457d7744fdc6719ea3';
-        const fetchPosts  = () => {
-          axios.get(`${URL}?q=${search}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`)
-            .then(response => {
-            setTotal(response.data.total)
-            return response.data.hits
+      const URL = 'https://pixabay.com/api/';
+      const KEY = '31527822-d896c43457d7744fdc6719ea3';
+      const fetchPosts = () => {
+        axios
+          .get(
+            `${URL}?q=${search}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
+          )
+          .then(response => {
+            setTotal(response.data.total);
+            return response.data.hits;
           })
           .then(data => {
             const dataArray = [];
-            data.map(({ id, webformatURL, largeImageURL }) => dataArray.push({ id, webformatURL, largeImageURL }))
+            data.map(({ id, webformatURL, largeImageURL }) => {
+              return { id, webformatURL, largeImageURL };
+            });
             if (dataArray.length === 0) {
               Notiflix.Notify.failure('not found any picture!');
             }
-            return dataArray
+            return dataArray;
           })
-          .then((newCards) => {
-            return setCards(cards => [...cards, ...newCards])
+          .then(newCards => {
+            return setCards(cards => [...cards, ...newCards]);
           })
           .catch(error => {
-            setError(error)
-            Notiflix.Notify.failure('sorry, we have a problem')
+            setError(error);
+            Notiflix.Notify.failure('sorry, we have a problem');
           })
           .finally(() => {
-            setLoading(false)
-          })
-        }
-        fetchPosts()
-      }
-    }, [search, page])
-
-      const onSubmit = e => {
-        e.preventDefault();
-        const searchValue = e.target.elements.searchInput.value;
-        if (searchValue !== '' && searchValue !== search) {
-          setCards([]);
-          setSearch(searchValue);
-          setPage(1);
-          setError('');
-          setLoading(true);
-        } else if (searchValue === '') {
-          Notiflix.Notify.info('input is empty!');
-        }
+            setLoading(false);
+          });
       };
+      fetchPosts();
+    }
+  }, [search, page]);
 
-      // useEffect((prevProps, prevState) => {
-      //   if (search !== prevState.search || page !== prevState.page) { return;}};
+  const onSubmit = e => {
+    e.preventDefault();
+    const searchValue = e.target.elements.searchInput.value;
+    if (searchValue !== '' && searchValue !== search) {
+      setCards([]);
+      setSearch(searchValue);
+      setPage(1);
+      setError('');
+      setLoading(true);
+    } else if (searchValue === '') {
+      Notiflix.Notify.info('input is empty!');
+    }
+  };
 
-      const onLoadMore = () => {
-        setPage(page + 1);
-        setLoading(true)
-      };
+  // useEffect((prevProps, prevState) => {
+  //   if (search !== prevState.search || page !== prevState.page) { return;}};
 
-      const toggleModal = showModal => setShowModal(!showModal);
+  const onLoadMore = () => {
+    setPage(page + 1);
+    setLoading(true);
+  };
 
-      const openModal = largeImageURL => {
-        setModalImage(largeImageURL);
-        toggleModal();
-      };
+  const toggleModal = showModal => setShowModal(!showModal);
+
+  const openModal = largeImageURL => {
+    setModalImage(largeImageURL);
+    toggleModal();
+  };
 
   return (
     <div className={css.App}>
