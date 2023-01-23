@@ -75,7 +75,7 @@ export function App() {
     setPage(page + 1);
   };
 
-  const toggleModal = showModal => setShowModal(!showModal);
+  const toggleModal = () => setShowModal(p => !p);
 
   const openModal = largeImageURL => {
     setModalImage(largeImageURL);
