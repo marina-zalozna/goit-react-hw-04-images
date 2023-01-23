@@ -9,33 +9,32 @@ import Notiflix from 'notiflix';
 
 import css from './App.module.css';
 
+const URL = 'https://pixabay.com/api/';
+const KEY = '31527822-d896c43457d7744fdc6719ea3';
+
 export function App() {
   const [cards, setCards] = useState([]);
   const [search, setSearch] = useState('');
-  const [ , setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [modalImage, setModalImage] = useState(null);
-  const [, setTotal] = useState(0);
 
   useEffect(() => {
     
     if (search !== '') {
-      const URL = 'https://pixabay.com/api/';
-      const KEY = '31527822-d896c43457d7744fdc6719ea3';
+      
       const fetchPosts = () => {
+        setLoading(true);
         axios
           .get(
             `${URL}?q=${search}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
           )
           .then(response => {
-            setTotal(response.data.total);
             return response.data.hits;
           })
           .then(data => {
-            const dataArray = [];
-            data.map(({ id, webformatURL, largeImageURL }) => {
+            const dataArray = data.map(({ id, webformatURL, largeImageURL }) => {
               return { id, webformatURL, largeImageURL };
             });
             if (dataArray.length === 0) {
@@ -47,7 +46,6 @@ export function App() {
             return setCards(cards => [...cards, ...newCards]);
           })
           .catch(error => {
-            setError(error);
             Notiflix.Notify.failure('sorry, we have a problem');
           })
           .finally(() => {
@@ -65,8 +63,6 @@ export function App() {
       setCards([]);
       setSearch(searchValue);
       setPage(1);
-      setError('');
-      setLoading(true);
     } else if (searchValue === '') {
       Notiflix.Notify.info('input is empty!');
     }
@@ -77,7 +73,6 @@ export function App() {
 
   const onLoadMore = () => {
     setPage(page + 1);
-    setLoading(true);
   };
 
   const toggleModal = showModal => setShowModal(!showModal);

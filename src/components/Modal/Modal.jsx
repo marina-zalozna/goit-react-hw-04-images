@@ -20,7 +20,7 @@ export function Modal({ onClose, modalImage }) {
     } , [onClose]);
 
     const handleCloseClick = e => {
-        if (e.currenttarget !== e.target) {
+        if (e.currenttarget === e.target) {
         onClose();
         }      
     };
